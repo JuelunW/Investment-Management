@@ -3,7 +3,6 @@ library(quantmod)
 library(PerformanceAnalytics)
 
 #### Log return ####
-setwd("O:/FIN 627 - Investment Management/02 Project")
 tickers <- read.csv("sym3.csv")
 sym <- as.vector(c(tickers[, 2], "SPY"))
 list <- lapply(sym, function(x)get(getSymbols(x, from = "2014-01-01", to = "2022-02-04")))#
@@ -29,8 +28,7 @@ mu <- mu[-51]
 R <- R[, -51]
 si <- cov(R)*252
 
-#mu1 <- c(tickers[, 3], 0.085)
-#mu <- mu1[-51]
+
 ##### Global Minimum Portfolio ####
 l <-matrix(rep(1, 50), ncol = 1)
 I <- diag(50)
@@ -79,26 +77,7 @@ w <- cbind(w_p, mu, sig = apply(R, 2, sd)*sqrt(252))
 w <- rbind(w, Portfolio = c(1, ds$mu_p[which.max(ds$SR)], ds$sigma_p[which.max(ds$SR)]))
 
 
-#others in FRM course
-#SR_port <- t(ds[1,2:51])
-GMV_port <- t(ds[100,2:51])
-
-#w_conv <- function(a) {
-#  w_a <- a*GMV_port + (1-a)*SR_port
-#  mu_a <- t(w_a)%*%mu
-#  sig_a <- sqrt(t(w_a)%*%si%*%w_a)
-#  results <- c(w_a,mu_a,sig_a)
-#  return(results)
-#}
-
-#a_seq <- seq(0,1,length = 1000)
-
-#ds2 <- data.frame(a = a_seq, t(sapply(a_seq,w_conv)) )
-#lines(X51~X52,data = ds2,col = 2,lty = 2)  
-
-
 #### Step 3: Utility ####
-
 r.o <- function(y)rf + y*(ds$mu_p[which.max(ds$SR)] - rf)
 sd.o <- function(y)y*ds$sigma_p[which.max(ds$SR)]
 
